@@ -64,6 +64,14 @@ dependencies {
     //gif image
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
 
+    //firebase
+    implementation platform('com.google.firebase:firebase-bom:28.4.1')
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'io.grpc:grpc-okhttp:1.32.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+
 
     // Instrumented Unit Tests
     androidTestImplementation "junit:junit:4.13"
@@ -101,3 +109,5 @@ dependencies {
 
 
 }
+
+apply plugin: 'com.google.gms.google-services'

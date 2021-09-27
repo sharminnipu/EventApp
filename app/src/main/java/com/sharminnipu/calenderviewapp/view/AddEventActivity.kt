@@ -9,15 +9,19 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.sharminnipu.calenderviewapp.R
+import com.sharminnipu.calenderviewapp.repository.FirestoreRepository
 import com.sharminnipu.calenderviewapp.util.Util
 import com.sharminnipu.calenderviewapp.roomDB.Event
+import com.sharminnipu.calenderviewapp.viewModel.EventFireStoreViewModel
 import com.sharminnipu.calenderviewapp.viewModel.EventViewModel
 import kotlinx.android.synthetic.main.activity_add_event.*
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddEventActivity : AppCompatActivity() {
     private lateinit var viewModel: EventViewModel
+    private lateinit var viewModelFireBase: EventFireStoreViewModel
     private  var data:Event?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +34,7 @@ class AddEventActivity : AppCompatActivity() {
 
     fun initialView(){
         viewModel= ViewModelProvider(this).get(EventViewModel::class.java)
+        viewModelFireBase= ViewModelProvider(this).get(EventFireStoreViewModel::class.java)
         if(Util.isUpdateEvent){
 
             data=intent.getParcelableExtra<Event>("action")
@@ -59,11 +64,14 @@ class AddEventActivity : AppCompatActivity() {
         val getTitle=etEventTitle.text.toString().trim()
         val getEventDes=etEventDes.text.toString().trim()
 
+        val updateEvent=Event(data.id,getTitle,getDate,getTime,getEventDes)
         if(!TextUtils.isEmpty(getDate) && !TextUtils.isEmpty(getTime) && !TextUtils.isEmpty(getTitle)){
 
-
-            var update= viewModel.update(this,Event(data.id,getTitle,getDate,getTime,getEventDes))
+               //update in roomDB
+            var update= viewModel.update(this,updateEvent)
             if (update){
+                //for update firebase
+                viewModelFireBase.insertFireStore(updateEvent)
                 Toast.makeText(this,"Your event updated successfully!!",Toast.LENGTH_LONG).show()
                 finish()
             }
@@ -123,24 +131,27 @@ class AddEventActivity : AppCompatActivity() {
 
     }
 
-    fun saveDataToLocalDB(){
-
+     fun saveDataToLocalDB(){
+        val id= FirestoreRepository.firebaseDB.collection("event_info").document().id
         val getDate=etEventDate.text.toString().trim()
         val getTime=etEventTime.text.toString().trim()
         val getTitle=etEventTitle.text.toString().trim()
         val getEventDes=etEventDes.text.toString().trim()
 
-        if(!TextUtils.isEmpty(getDate) && !TextUtils.isEmpty(getTime) && !TextUtils.isEmpty(getTitle)){
+        var sendEvent=Event(id,getTitle,getDate,getTime,getEventDes)
 
+        if(!TextUtils.isEmpty(getDate) && !TextUtils.isEmpty(getTime) && !TextUtils.isEmpty(getTitle)) {
 
-         var inserted= viewModel.insert(this,Event(0,getTitle,getDate,getTime,getEventDes))
-            if (inserted){
-                Toast.makeText(this,"Your event inserted successfully!!",Toast.LENGTH_LONG).show()
+             //insert for roomDB
+            var inserted = viewModel.insert(this, sendEvent)
+            if (inserted) {
+                //insert for firebase
+                viewModelFireBase.insertFireStore(sendEvent)
+                Toast.makeText(this, "Your event inserted successfully!!", Toast.LENGTH_LONG).show()
                 finish()
             }
 
-
-        }else
+        } else
         {
             Toast.makeText(this,"Please fill up the flied",Toast.LENGTH_LONG).show()
         }

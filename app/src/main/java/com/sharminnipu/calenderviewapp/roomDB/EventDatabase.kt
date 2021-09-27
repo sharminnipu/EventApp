@@ -33,8 +33,5 @@ abstract class EventDatabase :RoomDatabase() {
 
         }
 
-
-
-
-    }
-}
+      }
+  }

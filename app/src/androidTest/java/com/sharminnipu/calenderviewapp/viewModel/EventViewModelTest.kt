@@ -29,21 +29,21 @@ class EventViewModelTest :TestCase(){
     @Before
     public override fun setUp(){
        super.setUp()
-        val context=ApplicationProvider.getApplicationContext<Context>()
-        database = Room.inMemoryDatabaseBuilder(context,EventDatabase::class.java).allowMainThreadQueries().build()
+       // val context=ApplicationProvider.getApplicationContext<Context>()
+       // database = Room.inMemoryDatabaseBuilder(context,EventDatabase::class.java).allowMainThreadQueries().build()
 
         viewModel= EventViewModel()
     }
 
     @After
     fun dbClose(){
-        database.close()
+       // database.close()
     }
 
    @Test
    fun insertEvent(){
       val context=ApplicationProvider.getApplicationContext<Context>()
-      var model= Event(0,"Birthday","2021-09-23","10:00 PM","birthday party")
+      var model= Event("0","Birthday","2021-09-23","10:00 PM","birthday party")
        viewModel.insert(context,model)
      val result=  viewModel.getEventAll(context)?.getOrAwaitValue()?.find {
 
@@ -57,9 +57,9 @@ class EventViewModelTest :TestCase(){
     @Test
     fun updateEvent(){
         val context=ApplicationProvider.getApplicationContext<Context>()
-        var model= Event(1,"Birthday","2021-09-23","10:00 PM","birthday party khela")
+        var model= Event("1","Birthday","2021-09-23","10:00 PM","birthday party khela")
         viewModel.insert(context,model)
-        var modelUpdate=Event(1,"Birthday Party","2021-09-24","10:00 PM","Birthday Party")
+        var modelUpdate=Event("1","Birthday Party","2021-09-24","10:00 PM","Birthday Party")
         viewModel.update(context,modelUpdate)
         val result=  viewModel.getEventAll(context)?.getOrAwaitValue()
 
@@ -69,7 +69,7 @@ class EventViewModelTest :TestCase(){
     @Test
     fun deleteEvent(){
         val context=ApplicationProvider.getApplicationContext<Context>()
-        val model= Event(11,"hello","2021-09-30","10:05 PM","kisu kori na")
+        val model= Event("2","hello","2021-09-30","10:05 PM","kisu kori na")
         viewModel.insert(context,model)
         viewModel.delete(context,model)
         val result=  viewModel.getEventAll(context)?.getOrAwaitValue()

@@ -6,17 +6,14 @@ import androidx.room.*
 @Dao
 interface EventDAO {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     suspend fun insert(event: Event)
 
     @Query("SELECT * FROM event_info ORDER BY id DESC")
     fun getAllEvent():LiveData<List<Event>>
 
-    @Query("SELECT * FROM event_info WHERE eventDate= :date")
-    fun getEventByDate(date:String):LiveData<List<Event>>
-
-
-
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(plants: ArrayList<Event>)
 
     @Update
     suspend fun update(event: Event)
@@ -26,4 +23,5 @@ interface EventDAO {
 
     @Query("DELETE FROM EVENT_INFO")
     suspend fun deleteAllEvent()
+
 }
