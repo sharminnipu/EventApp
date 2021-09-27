@@ -5,9 +5,9 @@ Proudly 💪 made in Kotlin
 
 ## Features
 
--[Add Note](#add-note)
--[Delete Note](#delete-note)
--[Edit Note](#edit-note)
+- [Add Note](#add-note)
+- [Delete Note](#delete-note)
+- [Edit Note](#edit-note)
 
 
 
