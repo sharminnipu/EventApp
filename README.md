@@ -19,7 +19,7 @@ MVVM is one of the architectural patterns which enhances separation of concerns,
 - Repository: The repository depends on a persistent data model and a remote backend data source.
 
 
-##Library used
+## Library used
 
 - Room
 - Viewmodel
